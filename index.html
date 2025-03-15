@@ -20,33 +20,18 @@
             audio.play();
         }
 
-        // Função para buscar a imagem de um usuário específico
-        function fetchUserImage(userId, imgElementId) {
-            fetch(`https://discord-web-api.glitch.me/discord/user/${userId}`, {
-                method: "GET",
-                mode: "cors"
-            }).then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Network response was not ok.');
-            }).then(data => {
-                // Atualiza a imagem do usuário no elemento correspondente
-                document.getElementById(imgElementId).src = data.url;
-            }).catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
+        //
+        function fetchUserImage(imgElementId) {
+            const imgPath = `images/rt.png`;  //
+
+            // Atualiza a imagem do usuário no elemento correspondente
+            document.getElementById(imgElementId).src = imgPath;
         }
 
-        // IDs dos usuários que você deseja buscar
-        const userIds = [
-            { id: "913214371948290099", imgId: "rt" }  // Exemplo do primeiro usuário
-        ];
-
-        // Chamadas para buscar as imagens
-        userIds.forEach(user => {
-            fetchUserImage(user.id, user.imgId);
-        });
+        // Chamada para buscar a imagem
+        window.onload = function() {
+            fetchUserImage('rt');  //
+        };
     </script>
 </head>
 
