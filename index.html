@@ -20,17 +20,13 @@
             audio.play();
         }
 
-        //
         function fetchUserImage(imgElementId) {
-            const imgPath = `images/rt.png`;  //
-
-            // Atualiza a imagem do usuário no elemento correspondente
+            const imgPath = `images/rt.png`;
             document.getElementById(imgElementId).src = imgPath;
         }
 
-        // Chamada para buscar a imagem
         window.onload = function() {
-            fetchUserImage('rt');  //
+            fetchUserImage('rt');
         };
     </script>
 </head>
@@ -45,8 +41,7 @@
         <label for="overlay-toggle" onclick="audioPlay();">
             <span class="overlayno-hover hover" style="font-family: monospace; font-size: 0.6em;">click</span>
             <span class="overlayhover hover" style="font-family: monospace; font-size: 0.6em;">
-                <!-- Substitua a imagem PNG por um GIF -->
-                <img src="images/start-gif.gif" alt="image/gif"> <!-- Aqui foi alterado -->
+                <img src="images/start-gif.gif" alt="image/gif">
             </span>
         </label>
     </div>
@@ -57,8 +52,7 @@
     </video>
 
     <div class="all" style="text-align: center;">
-        <!-- Primeiro perfil (Centralizado) -->
-        <div class="discord-profile" style="will-change: transform; transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1); display: inline-block;">
+        <div class="discord-profile" style="display: inline-block;">
             <div class="profile animate__animated animate__fadeInUp animate__fast">
                 <div class="pfp">
                     <img class="profile-img" id="rt" data-user-id="913214371948290099" src="#">
@@ -67,15 +61,18 @@
                 <div class="nick subnick">amojett</div>
                 <div class="badges">
                     <div class="badge" style="background-image: url('images/1895-subscriber-nitro-animated.gif');" data-tooltip="Assinante desde 13 de dez. de 2024"></div>
-                    <!-- Nova badge -->
                     <div class="badge" style="background-image: url('images/booster.png');" data-tooltip="Impulsionando o servidor desde 13 de fev. de 2022"></div>
                     <div class="badge" style="background-image: url('images/missao.png');" data-tooltip="Completou uma Missão"></div>
                 </div>
                 <div class="social-buttons">
                     <a href="https://www.instagram.com/iluvhenri" target="_blank" class="social-button">
                         <i class="fab fa-instagram social-icon"></i>
+                    </a>
                     <a href="https://www.youtube.com/@rtmta/videos" target="_blank" class="social-button">
                         <i class="fab fa-youtube social-icon"></i>
+                    </a>
+                    <a href="https://br.pinterest.com/apaixono/" target="_blank" class="social-button">
+                        <i class="fab fa-pinterest social-icon"></i>
                     </a>
                 </div>
             </div>
