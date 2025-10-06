@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>w_<</title>
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="icon" href="images/ss.png" type="image/png">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="icon" href="images/ss.png" type="image/png" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
 
   <script>
@@ -21,10 +21,10 @@
 </head>
 <body>
   <audio loop preload="auto" id="audio">
-    <source src="media/neww.mp3" type="audio/mpeg">
+    <source src="media/neww.mp3" type="audio/mpeg" />
   </audio>
 
-  <input type="checkbox" autocomplete="off" id="overlay-toggle">
+  <input type="checkbox" autocomplete="off" id="overlay-toggle" />
   <div class="overlay fullscreen">
     <label for="overlay-toggle" onclick="audioPlay();">
       <span class="overlay-text">trust the process</span>
@@ -32,52 +32,107 @@
   </div>
 
   <video autoplay loop muted>
-    <source src="media/neww.mp4" type="video/mp4">
+    <source src="media/neww.mp4" type="video/mp4" />
     Seu navegador não suporta vídeo.
   </video>
 
   <div class="all">
-    <div class="discord-profile" 
-         data-tilt 
-         data-tilt-max="8" 
-         data-tilt-glare="true" 
-         data-tilt-max-glare="0.3">
+    <div
+      class="discord-profile"
+      data-tilt
+      data-tilt-max="8"
+      data-tilt-glare="true"
+      data-tilt-max-glare="0.3"
+    >
+      <!-- FOTO DE PERFIL DO DISCORD -->
+      <img id="discord-avatar" class="profile-img" src="" alt="Avatar do Discord" />
 
-      <img class="profile-img" src="images/rt.jpg" alt="pfp">
+      <!-- NOME DO DISCORD -->
+      <div id="discord-name" class="nickr">Carregando...</div>
 
-      <div class="nickr">raelxd</div>
-
+      <!-- BADGES FIXAS -->
       <div class="badges">
-        <div class="badge" style="background-image: url('images/1895-subscriber-nitro-animated.gif');" data-tooltip="Assinante desde 19 de fev. de 2025"></div>
-        <div class="badge" style="background-image: url('images/booster.png');" data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"></div>
+        <div
+          class="badge"
+          style="background-image: url('images/1895-subscriber-nitro-animated.gif');"
+          data-tooltip="Assinante desde 19 de fev. de 2025"
+        ></div>
+        <div
+          class="badge"
+          style="background-image: url('images/booster.png');"
+          data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"
+        ></div>
       </div>
 
       <div class="bio">sc</div>
 
       <div class="social-buttons">
-        <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"
+          ><i class="fab fa-youtube"></i
+        ></a>
+        <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"
+          ><i class="fab fa-tiktok"></i
+        ></a>
       </div>
 
       <div class="discord-profile-small">
-        <img src="images/rr.png" alt="Profile Picture" class="profile-img-small">
-        <span class="profile-name">rael</span>
-        <a href="https://discord.com/users/11933221207" target="_blank" class="profile-btn">Profile</a>
+        <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
+        <span id="discord-name-small" class="profile-name">Carregando...</span>
+        <a href="https://discord.com/users/SEU_ID_DO_DISCORD" target="_blank" class="profile-btn">Profile</a>
       </div>
 
+      <!-- STATUS -->
+      <div id="discord-status" class="status">Status: carregando...</div>
     </div>
   </div>
-  
+
   <script>
     VanillaTilt.init(document.querySelectorAll(".discord-profile"), {
       max: 10,
       speed: 400,
       glare: true,
-      "max-glare": 0.3
+      "max-glare": 0.3,
     });
+
+    async function carregarPerfil(userId) {
+      try {
+        const res = await fetch("https://SEU-APP.onrender.com/api/user/" + userId);
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("discord-name").textContent = "Erro ao carregar";
+          document.getElementById("discord-status").textContent = "Status: desconhecido";
+          return;
+        }
+
+        // Atualiza os elementos do perfil
+        document.getElementById("discord-avatar").src = data.avatarURL;
+        document.getElementById("discord-avatar-small").src = data.avatarURL;
+        document.getElementById("discord-name").textContent = data.displayName;
+        document.getElementById("discord-name-small").textContent = data.displayName;
+        document.getElementById("discord-status").textContent = "Status: " + traduzirStatus(data.status);
+      } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
+      }
+    }
+
+    function traduzirStatus(status) {
+      switch (status) {
+        case "online":
+          return "🟢 Online";
+        case "idle":
+          return "🟡 Ausente";
+        case "dnd":
+          return "🔴 Não Perturbe";
+        case "offline":
+          return "⚫ Offline";
+        default:
+          return status;
+      }
+    }
+
+    // Substitua pelo SEU ID do Discord:
+    carregarPerfil("499315885245464617");
   </script>
 </body>
 </html>
-
-
-
