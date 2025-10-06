@@ -2,15 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>w_<</title>
   <link rel="stylesheet" href="css/main.css" />
   <link rel="icon" href="images/ss.png" type="image/png" />
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
 
   <script>
@@ -47,10 +44,126 @@
       data-tilt-glare="true"
       data-tilt-max-glare="0.3"
     >
-      <img
-        class="profile-img"
-        src="images/rt.jpg"
-        alt="pfp"
-        id="main-profile-img"
-      />
-      <div class="nickr" id="main-profile-name">raelxd</
+      <!-- FOTO DE PERFIL DO DISCORD -->
+      <img id="discord-avatar" class="profile-img" src="" alt="Avatar do Discord" />
+
+      <!-- NOME DO DISCORD -->
+      <div id="discord-name" class="nickr">Carregando...</div>
+
+      <!-- BADGES FIXAS -->
+      <div class="badges">
+        <div
+          class="badge"
+          style="background-image: url('images/1895-subscriber-nitro-animated.gif');"
+          data-tooltip="Assinante desde 19 de fev. de 2025"
+        ></div>
+        <div
+          class="badge"
+          style="background-image: url('images/booster.png');"
+          data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"
+        ></div>
+      </div>
+
+      <div class="bio">sc</div>
+
+      <div class="social-buttons">
+        <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"
+          ><i class="fab fa-youtube"></i
+        ></a>
+        <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"
+          ><i class="fab fa-tiktok"></i
+        ></a>
+      </div>
+
+      <div class="discord-profile-small">
+        <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
+        <span id="discord-name-small" class="profile-name">Carregando...</span>
+        <!-- Ícone do status aqui -->
+        <i id="discord-status-icon" class="fas fa-circle status-offline" title="Status"></i>
+        <a href="https://discord.com/users/SEU_ID_DO_DISCORD" target="_blank" class="profile-btn">Profile</a>
+      </div>
+
+      <!-- STATUS (pode manter ou remover se quiser, pois o status estará no ícone) -->
+      <div id="discord-status" class="status" style="display:none;">Status: carregando...</div>
+    </div>
+  </div>
+
+  <script>
+    VanillaTilt.init(document.querySelectorAll(".discord-profile"), {
+      max: 10,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.3,
+    });
+
+    async function carregarPerfil(userId) {
+      try {
+        const res = await fetch("https://testeee-rtqe.onrender.com/api/user/" + userId);
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("discord-name").textContent = "Erro ao carregar";
+          // Oculta ou mostra o status textual como fallback
+          document.getElementById("discord-status").textContent = "Status: desconhecido";
+          return;
+        }
+
+        // Atualiza os elementos do perfil
+        document.getElementById("discord-avatar").src = data.avatarURL;
+        document.getElementById("discord-avatar-small").src = data.avatarURL;
+        document.getElementById("discord-name").textContent = data.displayName || data.username;
+        document.getElementById("discord-name-small").textContent = data.displayName || data.username;
+
+        // Atualiza o ícone do status no segundo card
+        const statusIcon = document.getElementById("discord-status-icon");
+        statusIcon.className = "fas fa-circle"; // reset classes
+
+        switch (data.status) {
+          case "online":
+            statusIcon.classList.add("status-online");
+            statusIcon.title = "Online";
+            break;
+          case "idle":
+            statusIcon.classList.add("status-idle");
+            statusIcon.title = "Ausente";
+            break;
+          case "dnd":
+            statusIcon.classList.add("status-dnd");
+            statusIcon.title = "Não Perturbe";
+            break;
+          default:
+            statusIcon.classList.add("status-offline");
+            statusIcon.title = "Offline";
+            break;
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
+      }
+    }
+
+    // Substitua pelo SEU ID do Discord:
+    carregarPerfil("499315885245464617");
+  </script>
+
+  <style>
+    /* Ícones de status */
+    .status-online {
+      color: #43b581; /* verde */
+    }
+    .status-idle {
+      color: #faa61a; /* amarelo */
+    }
+    .status-dnd {
+      color: #f04747; /* vermelho */
+    }
+    .status-offline {
+      color: #747f8d; /* cinza */
+    }
+    #discord-status-icon {
+      margin-left: 8px;
+      font-size: 1em;
+      vertical-align: middle;
+    }
+  </style>
+</body>
+</html>
