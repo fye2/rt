@@ -33,18 +33,8 @@
       height: 20px;
       border-radius: 50%;
       border: 3px solid #1e1f22; /* borda igual fundo p/ parecer "embutido" */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
+      background-color: #747f8d; /* cinza padrão - offline */
       cursor: default;
-    }
-    /* Remove qualquer cor, pois será SVG */
-    .status-indicator svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
     }
   </style>
 </head>
@@ -73,39 +63,43 @@
       data-tilt-glare="true"
       data-tilt-max-glare="0.3"
     >
-      <!-- FOTO DE PERFIL -->
-      <img id="discord-avatar" class="profile-img" src="" alt="Avatar do Discord" />
-
-      <!-- NOME -->
-      <div id="discord-name" class="nickr">Carregando...</div>
-
-      <!-- BADGES -->
+      <!-- PRIMEIRO CARD - FOTO E NOME MANUAL -->
+      <img
+        id="discord-avatar"
+        class="profile-img"
+        src="https://i.imgur.com/yourCustomImage.png"
+        alt="Avatar Customizado"
+      />
+      <div id="discord-name" class="nickr">Seu Nome Aqui</div>
       <div class="badges">
         <div class="badge" style="background-image: url('images/1895-subscriber-nitro-animated.gif');" data-tooltip="Assinante desde 19 de fev. de 2025"></div>
         <div class="badge" style="background-image: url('images/booster.png');" data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"></div>
       </div>
-
-      <!-- BIO -->
-      <div class="bio">sc</div>
-
-      <!-- SOCIAL -->
+      <div class="bio">Aqui sua bio ou descrição.</div>
       <div class="social-buttons">
         <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"><i class="fab fa-youtube"></i></a>
         <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"><i class="fab fa-tiktok"></i></a>
       </div>
 
-      <!-- SEGUNDO CARD (COM STATUS NO AVATAR) -->
+      <!-- SEGUNDO CARD - AVATAR PUXADO VIA API, NOME MANUAL -->
       <div class="discord-profile-small">
         <div class="avatar-wrapper">
-          <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
-          <div id="status-indicator" class="status-indicator" title="Offline"></div>
+          <img
+            id="discord-avatar-small"
+            src=""
+            alt="Avatar Pequeno"
+            class="profile-img-small"
+          />
+          <div
+            id="status-indicator"
+            class="status-indicator"
+            title="Offline"
+          ></div>
         </div>
-        <span id="discord-name-small" class="profile-name">Carregando...</span>
+        <!-- NOME MANUAL AQUI -->
+        <span id="discord-name-small" class="profile-name">Nome Personalizado</span>
         <a href="https://discord.com/users/499315885245464617" target="_blank" class="profile-btn">Profile</a>
       </div>
-
-      <!-- Texto de status (oculto ou opcional) -->
-      <div id="discord-status" class="status" style="display: none;">Status: carregando...</div>
     </div>
   </div>
 
@@ -117,62 +111,30 @@
       "max-glare": 0.3,
     });
 
-    const statusSVGs = {
-      online: `
-        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" >
-          <circle fill="#43B581" cx="10" cy="10" r="10"/>
-        </svg>
-      `,
-      idle: `
-        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#FAA61A" d="M19.99 10a9.99 9.99 0 0 1-16.833 7.44c.583-3.865 3.71-6.915 7.58-7.465V2A9.984 9.984 0 0 1 19.99 10z"/>
-        </svg>
-      `,
-      dnd: `
-        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <circle fill="#F04747" cx="10" cy="10" r="10"/>
-          <rect fill="#fff" x="5" y="9" width="10" height="2" rx="1"/>
-        </svg>
-      `,
-      offline: `
-        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <circle fill="#747F8D" cx="10" cy="10" r="10"/>
-        </svg>
-      `
-    };
+    const userId = "499315885245464617";
 
-    async function carregarPerfil(userId) {
+    async function fetchAvatar() {
       try {
         const res = await fetch("https://testeee-rtqe.onrender.com/api/user/" + userId);
         const data = await res.json();
 
         if (data.error) {
-          document.getElementById("discord-name").textContent = "Erro ao carregar";
+          console.error("Erro ao carregar avatar");
+          document.getElementById("discord-avatar-small").src =
+            "https://cdn.discordapp.com/embed/avatars/0.png";
           return;
         }
 
-        document.getElementById("discord-avatar").src = data.avatarURL;
-        document.getElementById("discord-avatar-small").src = data.avatarURL;
-        document.getElementById("discord-name").textContent = data.displayName || data.username;
-        document.getElementById("discord-name-small").textContent = data.displayName || data.username;
-
-        const status = data.status || "offline";
-        const statusEl = document.getElementById("status-indicator");
-
-        // Limpa conteúdo e insere SVG correspondente
-        statusEl.innerHTML = statusSVGs[status] || statusSVGs.offline;
-        statusEl.title = {
-          online: "Online",
-          idle: "Ausente",
-          dnd: "Não Perturbe",
-          offline: "Offline"
-        }[status] || "Offline";
+        const avatarURL = data.avatarURL || `https://cdn.discordapp.com/embed/avatars/0.png`;
+        document.getElementById("discord-avatar-small").src = avatarURL;
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
+        document.getElementById("discord-avatar-small").src =
+          "https://cdn.discordapp.com/embed/avatars/0.png";
       }
     }
 
-    carregarPerfil("499315885245464617");
+    fetchAvatar();
   </script>
 </body>
 </html>
