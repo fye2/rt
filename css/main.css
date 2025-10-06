@@ -251,3 +251,27 @@ body {
 .profile-btn:hover {
   background: rgba(255,255,255,0.2);
 }
+
+/* Ícones de status do Discord no segundo card */
+#discord-status-icon {
+  margin-left: 8px;
+  font-size: 1em;
+  vertical-align: middle;
+}
+
+/* Cores dos status */
+.status-online {
+  color: #43b581; /* verde */
+}
+
+.status-idle {
+  color: #faa61a; /* amarelo */
+}
+
+.status-dnd {
+  color: #f04747; /* vermelho */
+}
+
+.status-offline {
+  color: #747f8d; /* cinza */
+}
