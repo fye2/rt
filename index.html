@@ -10,21 +10,46 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
 
   <style>
-    /* Estilo para status sobre avatar pequeno */
+    /* Avatar com status (wrapper) */
     .avatar-wrapper {
       position: relative;
       width: 65px;
       height: 65px;
     }
-    .status-img {
+    .profile-img-small {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      display: block;
+    }
+    /* Status SVG container */
+    .status-indicator {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 18px;
-      height: 18px;
+      width: 20px; /* tamanho oficial */
+      height: 20px;
+      border: 3.5px solid #1e1f22; /* mesma cor do fundo para “embutir” */
       border-radius: 50%;
-      border: 3px solid #1e1f22; /* borda para destacar sobre o avatar */
-      background-color: transparent;
+      background: transparent;
+      pointer-events: none;
+    }
+    /* Cores para cada status (para fallback, mas SVGs já tem cor) */
+    .status-online svg circle,
+    .status-online svg path {
+      fill: #43b581 !important;
+    }
+    .status-idle svg circle,
+    .status-idle svg path {
+      fill: #faa61a !important;
+    }
+    .status-dnd svg circle,
+    .status-dnd svg path {
+      fill: #f04747 !important;
+    }
+    .status-offline svg circle,
+    .status-offline svg path {
+      fill: #747f8d !important;
     }
   </style>
 </head>
@@ -53,36 +78,43 @@
       data-tilt-glare="true"
       data-tilt-max-glare="0.3"
     >
-      <!-- Avatar maior -->
+      <!-- FOTO DE PERFIL -->
       <img id="discord-avatar" class="profile-img" src="" alt="Avatar do Discord" />
 
-      <!-- Nome grande -->
+      <!-- NOME -->
       <div id="discord-name" class="nickr">Carregando...</div>
 
-      <!-- Badges fixos -->
+      <!-- BADGES -->
       <div class="badges">
         <div class="badge" style="background-image: url('images/1895-subscriber-nitro-animated.gif');" data-tooltip="Assinante desde 19 de fev. de 2025"></div>
         <div class="badge" style="background-image: url('images/booster.png');" data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"></div>
       </div>
 
+      <!-- BIO -->
       <div class="bio">sc</div>
 
+      <!-- SOCIAL -->
       <div class="social-buttons">
         <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"><i class="fab fa-youtube"></i></a>
         <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"><i class="fab fa-tiktok"></i></a>
       </div>
 
-      <!-- Segundo cartão com avatar pequeno e status sobreposto -->
+      <!-- SEGUNDO CARD (COM STATUS NO AVATAR) -->
       <div class="discord-profile-small">
         <div class="avatar-wrapper">
           <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
-          <img id="status-img" class="status-img" src="images/status/offline.svg" alt="Status" />
+          <div id="status-indicator" class="status-indicator status-offline" title="Offline">
+            <!-- SVG Status (padrão offline) -->
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" >
+              <circle cx="10" cy="10" r="10" fill="#747F8D"/>
+            </svg>
+          </div>
         </div>
         <span id="discord-name-small" class="profile-name">Carregando...</span>
         <a href="https://discord.com/users/499315885245464617" target="_blank" class="profile-btn">Profile</a>
       </div>
 
-      <!-- Texto status oculto (se quiser deixar visível, remova `display: none`) -->
+      <!-- Texto de status (oculto ou opcional) -->
       <div id="discord-status" class="status" style="display: none;">Status: carregando...</div>
     </div>
   </div>
@@ -102,6 +134,23 @@
       "max-glare": 0.3,
     });
 
+    // SVGs para cada status
+    const statusSVGs = {
+      online: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="10" fill="#43B581"/>
+      </svg>`,
+      idle: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FAA61A" d="M10 0a10 10 0 1 0 0 20V0z"/>
+      </svg>`,
+      dnd: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="10" fill="#F04747"/>
+        <rect x="5" y="9" width="10" height="2" fill="#FFF"/>
+      </svg>`,
+      offline: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="10" fill="#747F8D"/>
+      </svg>`
+    };
+
     async function carregarPerfil(userId) {
       try {
         const res = await fetch("https://testeee-rtqe.onrender.com/api/user/" + userId);
@@ -118,26 +167,14 @@
         document.getElementById("discord-name-small").textContent = data.displayName || data.username;
 
         const status = data.status || "offline";
-        const statusImgEl = document.getElementById("status-img");
+        const statusEl = document.getElementById("status-indicator");
 
-        switch (status) {
-          case "online":
-            statusImgEl.src = "images/online.svg";
-            statusImgEl.alt = "Online";
-            break;
-          case "idle":
-            statusImgEl.src = "images/idle.svg";
-            statusImgEl.alt = "Ausente";
-            break;
-          case "dnd":
-            statusImgEl.src = "images/dnd.png";
-            statusImgEl.alt = "Não Perturbe";
-            break;
-          default:
-            statusImgEl.src = "images/offline.svg";
-            statusImgEl.alt = "Offline";
-            break;
-        }
+        // Atualiza classe (para fallback)
+        statusEl.className = "status-indicator status-" + status;
+
+        // Atualiza SVG do status
+        statusEl.innerHTML = statusSVGs[status] || statusSVGs.offline;
+        statusEl.title = status.charAt(0).toUpperCase() + status.slice(1);
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
       }
@@ -147,5 +184,3 @@
   </script>
 </body>
 </html>
-
-
