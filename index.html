@@ -9,47 +9,42 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
 
+  <script>
+    function audioPlay() {
+      const audio = document.getElementById("audio");
+      audio.volume = 0.5;
+      audio.currentTime = 0;
+      audio.play();
+    }
+  </script>
+
   <style>
-    /* Avatar com status (wrapper) */
+    /* Ícones de status sobre avatar */
     .avatar-wrapper {
       position: relative;
       width: 65px;
       height: 65px;
     }
-    .profile-img-small {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      display: block;
-    }
-    /* Status SVG container */
     .status-indicator {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 20px; /* tamanho oficial */
+      width: 20px;
       height: 20px;
-      border: 3.5px solid #1e1f22; /* mesma cor do fundo para “embutir” */
       border-radius: 50%;
+      border: 3px solid #1e1f22; /* borda igual fundo p/ parecer "embutido" */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: transparent;
-      pointer-events: none;
+      cursor: default;
     }
-    /* Cores para cada status (para fallback, mas SVGs já tem cor) */
-    .status-online svg circle,
-    .status-online svg path {
-      fill: #43b581 !important;
-    }
-    .status-idle svg circle,
-    .status-idle svg path {
-      fill: #faa61a !important;
-    }
-    .status-dnd svg circle,
-    .status-dnd svg path {
-      fill: #f04747 !important;
-    }
-    .status-offline svg circle,
-    .status-offline svg path {
-      fill: #747f8d !important;
+    /* Remove qualquer cor, pois será SVG */
+    .status-indicator svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
   </style>
 </head>
@@ -103,12 +98,7 @@
       <div class="discord-profile-small">
         <div class="avatar-wrapper">
           <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
-          <div id="status-indicator" class="status-indicator status-offline" title="Offline">
-            <!-- SVG Status (padrão offline) -->
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" >
-              <circle cx="10" cy="10" r="10" fill="#747F8D"/>
-            </svg>
-          </div>
+          <div id="status-indicator" class="status-indicator" title="Offline"></div>
         </div>
         <span id="discord-name-small" class="profile-name">Carregando...</span>
         <a href="https://discord.com/users/499315885245464617" target="_blank" class="profile-btn">Profile</a>
@@ -120,13 +110,6 @@
   </div>
 
   <script>
-    function audioPlay() {
-      const audio = document.getElementById("audio");
-      audio.volume = 0.5;
-      audio.currentTime = 0;
-      audio.play();
-    }
-
     VanillaTilt.init(document.querySelectorAll(".discord-profile"), {
       max: 10,
       speed: 400,
@@ -134,21 +117,28 @@
       "max-glare": 0.3,
     });
 
-    // SVGs para cada status
     const statusSVGs = {
-      online: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="10" cy="10" r="10" fill="#43B581"/>
-      </svg>`,
-      idle: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#FAA61A" d="M10 0a10 10 0 1 0 0 20V0z"/>
-      </svg>`,
-      dnd: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="10" cy="10" r="10" fill="#F04747"/>
-        <rect x="5" y="9" width="10" height="2" fill="#FFF"/>
-      </svg>`,
-      offline: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="10" cy="10" r="10" fill="#747F8D"/>
-      </svg>`
+      online: `
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" >
+          <circle fill="#43B581" cx="10" cy="10" r="10"/>
+        </svg>
+      `,
+      idle: `
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#FAA61A" d="M19.99 10a9.99 9.99 0 0 1-16.833 7.44c.583-3.865 3.71-6.915 7.58-7.465V2A9.984 9.984 0 0 1 19.99 10z"/>
+        </svg>
+      `,
+      dnd: `
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <circle fill="#F04747" cx="10" cy="10" r="10"/>
+          <rect fill="#fff" x="5" y="9" width="10" height="2" rx="1"/>
+        </svg>
+      `,
+      offline: `
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <circle fill="#747F8D" cx="10" cy="10" r="10"/>
+        </svg>
+      `
     };
 
     async function carregarPerfil(userId) {
@@ -169,12 +159,14 @@
         const status = data.status || "offline";
         const statusEl = document.getElementById("status-indicator");
 
-        // Atualiza classe (para fallback)
-        statusEl.className = "status-indicator status-" + status;
-
-        // Atualiza SVG do status
+        // Limpa conteúdo e insere SVG correspondente
         statusEl.innerHTML = statusSVGs[status] || statusSVGs.offline;
-        statusEl.title = status.charAt(0).toUpperCase() + status.slice(1);
+        statusEl.title = {
+          online: "Online",
+          idle: "Ausente",
+          dnd: "Não Perturbe",
+          offline: "Offline"
+        }[status] || "Offline";
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
       }
