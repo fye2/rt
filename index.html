@@ -8,161 +8,60 @@
   <link rel="icon" href="images/ss.png" type="image/png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
-
-  <script>
-    function audioPlay() {
-      const audio = document.getElementById("audio");
-      audio.volume = 0.5;
-      audio.currentTime = 0;
-      audio.play();
-    }
-  </script>
-
   <style>
-    /* Ícones de status sobre avatar */
     .avatar-wrapper {
       position: relative;
       width: 65px;
       height: 65px;
     }
-
-    .status-indicator {
+    .status-img {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      border: 3px solid #1e1f22; /* borda igual fundo p/ parecer "embutido" */
-    }
-
-    .status-online {
-      background-color: #43b581;
-    }
-
-    .status-idle {
-      background-color: #faa61a;
-    }
-
-    .status-dnd {
-      background-color: #f04747;
-    }
-
-    .status-offline {
-      background-color: #747f8d;
+      width: 18px;
+      height: 18px;
     }
   </style>
 </head>
 <body>
-  <audio loop preload="auto" id="audio">
-    <source src="media/neww.mp3" type="audio/mpeg" />
-  </audio>
+  <!-- ... resto do seu HTML ... -->
 
-  <input type="checkbox" autocomplete="off" id="overlay-toggle" />
-  <div class="overlay fullscreen">
-    <label for="overlay-toggle" onclick="audioPlay();">
-      <span class="overlay-text">trust the process</span>
-    </label>
-  </div>
-
-  <video autoplay loop muted>
-    <source src="media/neww.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeo.
-  </video>
-
-  <div class="all">
-    <div
-      class="discord-profile"
-      data-tilt
-      data-tilt-max="8"
-      data-tilt-glare="true"
-      data-tilt-max-glare="0.3"
-    >
-      <!-- FOTO DE PERFIL -->
-      <img id="discord-avatar" class="profile-img" src="" alt="Avatar do Discord" />
-
-      <!-- NOME -->
-      <div id="discord-name" class="nickr">Carregando...</div>
-
-      <!-- BADGES -->
-      <div class="badges">
-        <div class="badge" style="background-image: url('images/1895-subscriber-nitro-animated.gif');" data-tooltip="Assinante desde 19 de fev. de 2025"></div>
-        <div class="badge" style="background-image: url('images/booster.png');" data-tooltip="Impulsionando o servidor desde 26 de jul. de 2024"></div>
-      </div>
-
-      <!-- BIO -->
-      <div class="bio">sc</div>
-
-      <!-- SOCIAL -->
-      <div class="social-buttons">
-        <a href="https://www.youtube.com/@raelfvm/videos" target="_blank" class="social-button"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.tiktok.com/@_rtffz" target="_blank" class="social-button"><i class="fab fa-tiktok"></i></a>
-      </div>
-
-      <!-- SEGUNDO CARD (COM STATUS NO AVATAR) -->
-      <div class="discord-profile-small">
-        <div class="avatar-wrapper">
-          <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
-          <div id="status-indicator" class="status-indicator status-offline" title="Offline"></div>
-        </div>
-        <span id="discord-name-small" class="profile-name">Carregando...</span>
-        <a href="https://discord.com/users/499315885245464617" target="_blank" class="profile-btn">Profile</a>
-      </div>
-
-      <!-- Texto de status (oculto ou opcional) -->
-      <div id="discord-status" class="status" style="display: none;">Status: carregando...</div>
+  <div class="discord-profile-small">
+    <div class="avatar-wrapper">
+      <img id="discord-avatar-small" src="" alt="Avatar Pequeno" class="profile-img-small" />
+      <img id="status-img" class="status-img" src="images/status/offline.svg" alt="status" />
     </div>
+    <span id="discord-name-small" class="profile-name">Carregando...</span>
+    <a href="https://discord.com/users/499315885245464617" target="_blank" class="profile-btn">Profile</a>
   </div>
 
   <script>
-    VanillaTilt.init(document.querySelectorAll(".discord-profile"), {
-      max: 10,
-      speed: 400,
-      glare: true,
-      "max-glare": 0.3,
-    });
-
     async function carregarPerfil(userId) {
-      try {
-        const res = await fetch("https://testeee-rtqe.onrender.com/api/user/" + userId);
-        const data = await res.json();
+      const res = await fetch("https://testeee-rtqe.onrender.com/api/user/" + userId);
+      const data = await res.json();
+      if (data.error) return;
 
-        if (data.error) {
-          document.getElementById("discord-name").textContent = "Erro ao carregar";
-          return;
-        }
+      document.getElementById("discord-avatar-small").src = data.avatarURL;
+      document.getElementById("discord-name-small").textContent = data.displayName || data.username;
 
-        document.getElementById("discord-avatar").src = data.avatarURL;
-        document.getElementById("discord-avatar-small").src = data.avatarURL;
-        document.getElementById("discord-name").textContent = data.displayName || data.username;
-        document.getElementById("discord-name-small").textContent = data.displayName || data.username;
-
-        const status = data.status || "offline";
-        const statusEl = document.getElementById("status-indicator");
-
-        // Reset classes
-        statusEl.className = "status-indicator";
-
-        // Add class by status
-        switch (status) {
-          case "online":
-            statusEl.classList.add("status-online");
-            statusEl.title = "Online";
-            break;
-          case "idle":
-            statusEl.classList.add("status-idle");
-            statusEl.title = "Ausente";
-            break;
-          case "dnd":
-            statusEl.classList.add("status-dnd");
-            statusEl.title = "Não Perturbe";
-            break;
-          default:
-            statusEl.classList.add("status-offline");
-            statusEl.title = "Offline";
-        }
-      } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
+      const statusImg = document.getElementById("status-img");
+      switch (data.status) {
+        case "online":
+          statusImg.src = "images/status/online.svg";
+          statusImg.alt = "Online";
+          break;
+        case "idle":
+          statusImg.src = "images/status/idle.svg";
+          statusImg.alt = "Ausente";
+          break;
+        case "dnd":
+          statusImg.src = "images/status/dnd.svg";
+          statusImg.alt = "Não Perturbe";
+          break;
+        default:
+          statusImg.src = "images/status/offline.svg";
+          statusImg.alt = "Offline";
+          break;
       }
     }
 
