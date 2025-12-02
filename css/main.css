@@ -1,257 +1,293 @@
-video {
-  position: fixed;
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* FONT UNBOUNDED BOLD */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400&display=swap');
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Unbounded', sans-serif; /* Aplicada a Unbounded Bold em todo o site */
+}
+
+#background-video {
+  position: absolute;
   right: 0;
-  bottom: 0; /* corrigido para ter unidade */
+  bottom: 0;
   min-width: 100%;
   min-height: 100%;
   object-fit: cover;
-  z-index: -2;
-}
-
-body {
-  background-color: #000001 !important;
-  color: #fff !important;
-  margin: 0;
-  padding: 0;
-  font-family: "gg sans", "Whitney", "Helvetica Neue", sans-serif;
-}
-
-#overlay-toggle {
-  position: absolute;
-  display: none;
+  z-index: 0;
 }
 
 .overlay {
-  z-index: 5;
-  background-color: #000001;
-}
-
-.overlay label {
-  display: grid;
-  place-items: center;
-  width: 100vw;
-  height: 100vh;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.overlay-text {
-  font-family: monospace;
-  font-size: 1.2em;
-  color: white;
-  transition: 0.3s;
-}
-
-.overlay-text:hover {
-  color: gray;
-}
-
-.fullscreen {
   position: fixed;
-  top: 0;
-  left: 0;
-  min-height: 100vh;
-  min-width: 100vw;
+  inset: 0;
+  z-index: 50;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
-.all {
+.overlay-button {
+  color: #fff;
+  font-family: 'Unbounded', sans-serif; /* Para garantir que o botão use a mesma fonte */
+  font-weight: 400;
+  font-size: 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.overlay-button:hover {
+  color: #999;
+}
+
+.main-content {
   position: relative;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
 }
 
-#overlay-toggle:checked ~ .overlay {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+.card-wrapper {
+  display: inline-block;
 }
 
-#overlay-toggle:checked ~ .all {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.discord-profile {
+.card {
   position: relative;
-  background: rgba(255, 255, 255, 0.027);
-  border: 1px solid rgba(255, 0, 0, 0);
-  border-radius: 12px;
-  padding: 98px 80px;
-  width: 590px;
-  height: 250px;
+  padding: 5rem;
+  width: 750px;
+  height: 447px;
   text-align: center;
-  color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
-.profile-img {
-  width: 90px;
-  height: 90px;
+.view-count svg {
+  width: 12px;
+  height: 12px;
+}
+
+.avatar-main {
+  width: 89px;
+  height: 89px;
   border-radius: 50%;
-  margin-bottom: 10px;
-  margin-top: -60px;
+  margin-bottom: rem;
+  position: relative;
+  top: -64px;
+  left: 0px;
 }
 
-.nickr {
-  font-weight: 600;
-  font-size: 18px;
+.username {
+  font-size: 1.1rem;
+  font-weight: 700; /* bold garantido */
+  font-family: 'Unbounded', sans-serif;
+  color: #ffffff;
+  position: fixed; /* livre na tela */
+  top: 155px;      /* ajuste conforme quiser */
+  left: 342px;     /* ajuste conforme quiser */
+  z-index: 100;    /* acima de outros elementos */
+  margin-bottom: 0.5rem;
+}
+
+.badges {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  top: -10px;
+  left: 0px;
 }
 
 .bio {
-  font-size: 14px;
-  color: #ccc;
-  margin: 6px 0 10px;
-}
-
-/* Badges */
-.badges {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 400; /* bold garantido */
+  font-family: 'Unbounded', sans-serif;
+  color: #ffffff;
+  position: fixed; /* livre na tela */
+  top: 225px;      /* ajuste conforme quiser */
+  left: 315px;     /* ajuste conforme quiser */
+  z-index: 100;    /* acima de outros elementos */
+  margin-bottom: 0.5rem;
 }
 
 .badge {
-  width: 23px;
-  height: 23px;
+  width: 22px;
+  height: 22px;
   background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 0px;
-  position: relative;
-}
-
-.badge[data-tooltip] {
+  background-position: center;
   position: relative;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.badge[data-tooltip]::after {
+.badge:hover {
+  transform: scale(1.1);
+}
+
+.badge::after {
   content: attr(data-tooltip);
   position: absolute;
-  background-color: #444;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  bottom: 30px;
+  bottom: calc(100% + 0.5rem);
   left: 50%;
   transform: translateX(-50%);
+  padding: 0.375rem 0.75rem;
+  background-color: #111;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
   white-space: nowrap;
-  z-index: 1;
-  font-size: 12px;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease;
-  font-family: "gg sans", "Whitney", "Helvetica Neue", sans-serif;
 }
 
-.badge[data-tooltip]:hover::after {
+.badge:hover::after {
   opacity: 1;
 }
 
 .social-buttons {
-  margin-top: 12px;
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  top: 40px;
+  left: 0px;
 }
 
 .social-button {
-  font-size: 1.4rem;
-  color: white;
-  transition: 0.3s;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
 }
 
 .social-button:hover {
-  color: #1da1f2;
-}
-
-.sites {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.sites a {
-  font-size: 13px;
-  color: #aaa;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.sites a:hover {
   color: #fff;
+}
+
+.social-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.375rem 0.75rem;
+  background-color: #111;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.social-button:hover::after {
+  opacity: 1;
 }
 
 .discord-profile-small {
-  margin-top: 55px;
-  background: rgba(255, 255, 255, 0.027);
-  border: 0px solid rgba(255, 255, 255, 0.027);
-  border-radius: 12px;
-  padding: 10px 20px;
-  width: 635px;
+  background-color: #ffffff07;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  padding: 1.0rem 0.55rem;
+  width: 115%;
+  height: 30.50%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #fff;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.027);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(14px);
-  margin-left: -45px;
-  transition: transform 0.3s ease;
+  transition: background-color 0.3s ease;
+  position: relative;
+  top:  42px;
+  left: -45px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
 }
 
 .discord-profile-small:hover {
-  transform: scale(1.02);
+  background-color: #111;
 }
 
-.second-badges {
+.profile-left {
   display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.profile-name {
-  font-size: 17px;
-  font-weight: 600;
-  margin-left: -440px;
-  flex: 1;
-}
-
-.profile-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 6px 14px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-.profile-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  align-items: center;
+  gap: 1rem;
 }
 
 .avatar-wrapper {
-  /* Removi pois estava ligado a status */
+  position: relative;
 }
 
-.profile-img-small {
+.avatar-small {
   width: 65px;
   height: 65px;
   border-radius: 50%;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #292524;
+  border-radius: 50%;
+  border: 2.5px solid #292524;
+  width: 1.19rem;
+  height: 1.19rem;
+}
+
+.profile-name {
+  font-size: 1.0rem;
+  font-weight: 500;
+}
+
+.profile-btn {
+  background-color: rgba(255, 255, 255, 0.041);
+  border-radius: .5rem;
+  border: 1px solid rgba(255, 255, 255, 0.095);
+  padding: 0.4rem 1.0rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.675rem;
+  transition: background-color 0.3s ease;
+  font-family: 'Unbounded', sans-serif;
+  width: 5.0rem;
+  height: 1.rem;
+}
+
+.profile-btn:hover {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 90vw;
+    max-width: 600px;
+    padding: 3rem 2rem;
+  }
 }
